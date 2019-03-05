@@ -24,7 +24,7 @@ void print_bits(unsigned x)
     }
 }
 
-unsigned set(unsigned x, int pos)
+unsigned set_n(unsigned x, int pos, int n)
 {
     unsigned u = (1U << (pos - 1));
     return u | x;
