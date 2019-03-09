@@ -24,27 +24,32 @@ void print_bits(unsigned x)
     }
 }
 
+unsigned make_bits(int pos,int n){
+    int i;
+    unsigned u = 0U;
+    for (i = 0; i < n; i++){
+        u = u | (1U << (pos + i - 1));
+    }
+    return u;
+}
+
 unsigned set_n(unsigned x, int pos, int n)
 {
-    unsigned u = (1U << (pos - 1));
-    return u | x;
+    return x | make_bits(pos,n);
 }
 
-unsigned reset(unsigned x, int pos)
+unsigned reset_n(unsigned x, int pos, int n)
 {
-    unsigned u1,u2;
-    u1 = (x >> pos) << pos;
-    u2 = (x << (int_bits() - pos)) >> (int_bits() - pos);
-    return u1 | u2;
+    x = set_n(~x,pos,n);
+    return ~x;
 }
 
-unsigned inverse(unsigned x, int pos)
+unsigned inverse_n(unsigned x, int pos, int n)
 {
-    unsigned u1,u2,u3;
-    u1 = (x >> pos) << pos;
-    u2 = (x << (int_bits() - pos)) >> (int_bits() - pos);
-    u3 = ((~x >> (pos - 1)) << (int_bits() - 1)) >> (int_bits() - pos);
-    return (u1 | u2) | u3;
+    unsigned u1 = set_n(x, pos + n, int_bits() - pos - n + 1);
+    unsigned u2 = set_n(u1, 1, pos - 1);
+    unsigned u3 = reset_n(x, pos, n);
+    return u3 | (~u2);
 }
 
 int main()
@@ -52,10 +57,10 @@ int main()
     int no;
 
     printf("no:"); scanf("%d",&no);
-    printf("           no:"); print_bits(no); printf("\n");
-    printf("    set(no,3):"); print_bits(set(no,3)); printf("\n");
-    printf("  reset(no,3):"); print_bits(reset(no,3)); printf("\n");
-    printf("inverse(no,3):"); print_bits(inverse(no,3));
+    printf("               no:"); print_bits(no); printf("\n");
+    printf("    set_n(no,3,5):"); print_bits(set_n(no,3,5)); printf("\n");
+    printf("  reset_n(no,3,5):"); print_bits(reset_n(no,3,5)); printf("\n");
+    printf("inverse_n(no,3,5):"); print_bits(inverse_n(no,3,5));
     printf("\n");
 
     return 0;
