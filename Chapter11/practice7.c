@@ -21,7 +21,7 @@ char *str_tolower(char *s)
     return temp;
 }
 
-int main()
+int main(void)
 {
     char *str;
 
